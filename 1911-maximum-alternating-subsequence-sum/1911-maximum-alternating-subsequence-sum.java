@@ -1,23 +1,28 @@
+import java.util.HashMap;
+import java.util.Map;
+
 class Solution {
     public long maxAlternatingSum(int[] nums) {
         int n = nums.length;
-        Long[][] memo = new Long[n][2];
-        for (int i = 0; i < n; i++) Arrays.fill(memo[i], null);
-        return solve(nums, 0, n, false, memo);
+        Map<String, Long> memo = new HashMap<>();
+        return solve(nums, 0, n, 1, memo);
     }
 
-    public static long solve(int[] nums, int index, int n, boolean signneg, Long[][] memo) {
+    public long solve(int[] nums, int index, int n, int sign, Map<String, Long> memo) {
         if (index >= n) return 0;
-        if (memo[index][signneg ? 1 : 0] != null) return memo[index][signneg ? 1 : 0]; 
-        //skip
-        long skip = solve(nums, index + 1, n, signneg, memo);
-        //take
-        long value = nums[index];
-        if (signneg) {
-            value = -1 * value;
+
+        String key = index + "," + sign;
+        if (memo.containsKey(key)) {
+            return memo.get(key);
         }
-        long take = value + solve(nums, index + 1, n, !signneg, memo);
-        memo[index][signneg ? 1 : 0] = Math.max(skip, take);
-        return memo[index][signneg ? 1 : 0];
+
+        long skip = solve(nums, index + 1, n, sign, memo);
+
+        long value = nums[index] * sign;
+        long take = value + solve(nums, index + 1, n, -sign, memo);
+
+        long result = Math.max(skip, take);
+        memo.put(key, result);
+        return result;
     }
 }
