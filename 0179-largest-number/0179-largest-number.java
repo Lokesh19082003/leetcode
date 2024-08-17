@@ -1,19 +1,34 @@
-class Solution {
-    public String largestNumber(int[] nums) {
-        int n=nums.length;
-        String[] str=new String[n];
-        for(int i=0;i<n;i++){
-            str[i]=Integer.toString(nums[i]);
+class Solution
+{
+    public String largestNumber(int[] nums)
+    {
+        String numstr[]=new String[nums.length];
+        for(int i=0;i<nums.length;i++)
+        {
+            numstr[i]=String.valueOf(nums[i]);
+        }    
+//Arrays.sort(numstr,(a,b)->(b+a).compareTo(a+b));        
+        for(int i=0;i<nums.length-1;i++)
+        {
+            for(int j=i+1;j<nums.length;j++)
+            {
+               if ((numstr[i] + numstr[j]).compareTo(numstr[j] + numstr[i]) < 0)
+                {
+                    String temp=numstr[i];
+                    numstr[i]=numstr[j];
+                    numstr[j]=temp;
+                }
+            }
         }
-        Arrays.sort(str,(b,a)-> (a+b).compareTo(b+a));
-        StringBuilder str1 = new StringBuilder(n);
-
-        for(int i=0;i<n;i++){
-            str1.append(str[i]);
+        if(numstr[0].equals("0"))
+        {
+            return "0";
         }
-        if(str1.charAt(0)=='0')
-           return "0";
-        else
-           return str1.toString();
+        StringBuilder res=new StringBuilder();
+        for(int i=0;i<numstr.length;i++)
+        {
+            res.append(numstr[i]);
+        }
+        return res.toString();
     }
 }
